@@ -1,0 +1,19 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+server:
+  port: 8003
+spring:
+  application:
+    name: hoteles
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: rootroot
+    url: jdbc:mysql://localhost:3346/viajes?serverTimezone=UTC
+    username: root
+  jpa:
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

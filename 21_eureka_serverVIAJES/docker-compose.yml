@@ -1,0 +1,13 @@
+version: "3"
+services:
+  viajes-docker:
+    image: registry.localhost:5000/viajes/viajes-back:latest
+    container_name: viajes_back
+    ports:
+      - "8080:8080"
+    networks:
+      - viajes-network
+
+networks:
+  viajes-network:
+

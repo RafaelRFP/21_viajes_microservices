@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reservas de Vuelos</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link href="css/Estilo.css" rel="stylesheet" type="text/css">
+<link href="css/MiEstilo.css" rel="stylesheet" type="text/css">
+<link href="css/Resgistro.css" rel="stylesheet" type="text/css"> 
+<link href="css/EstilosVideo.css" rel="stylesheet" type="text/css"> 
+<link href="css/Login.css" rel="stylesheet" type="text/css"> 
+<link href="css/material-design-iconic-font.min.css" rel="stylesheet" type="text/css">  
+<!-- Bootstrap CSS   -->
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">   
+<!-- FontAwesom CSS 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">  -->      
+<!--Sweet Alert 2 -->
+<link rel="stylesheet" href="plugins/sweetalert2/sweetalert2.min.css">    
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.min.js"></script> 
+ 
+<!--CSS custom   -->
+<link rel="stylesheet" href="main.css">  
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+</head>
+
+
+<body onload="cargarPagina();">
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<!-- The video -->
+<video autoplay muted loop id="myVideo">
+  <source src="video/Airport.mp4" type="video/mp4">
+</video>
+
+<div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+  <a href="javascript:void(0)" onclick="PantallaHacerReserva();">Hacer una Reserva</a>
+  <a href="javascript:void(0)" onclick="PantallaListarReservas();">Listar Reservas</a>
+  <a href="#"></a>
+ </div>
+
+
+	
+<div class="container" id="main">
+  <button class="openbtn" onclick="openNav()">☰ MENÚ DE OPCIONES</button>
+  
+</div> 
+
+
+
+
+
+<div class="container" id="selecHoteles"></div>
+<div class="container" id="DatosHotel"></div>
+<div class="container" id="selecVuelos"></div>
+
+<div class="container" id="PantReserva">
+	<hr>
+	<h1>Registro de Reserva </h1>
+	<hr>
+	<form id="FormularioReserva">
+	    <label for="dni"><b>DNI</b></label><br>
+	    <input type="text" placeholder="DNI de la Reserva" name="dni" id="dni" required>
+		<br><br>
+	    <label for="titular"><b>Titular</b></label><br>
+	    <input type="text" placeholder="Titular de la Reserva" name="titular" id="titular" required>
+	    
+		<input type="button" onclick="reservar();" class="registerbtn" value="Finalizar Reserva">
+	</form>
+</div>
+	<div class="container">
+		<div id="autenticacion">
+
+			<!-- 		
+			<br><br>
+			Usuario: <input type="text" id="user"> 
+			Contraseña: <input type="password" id="pwd"> 
+			<input type="button" value="Entrar" onclick="entrar();">
+			<br><br>
+-->
+
+			<button class="open-button" onclick="openForm()">Registro de
+				Seguridad</button>
+
+			<div class="form-popup" id="myForm">
+				<form class="form-container">
+					<h1>Login</h1>
+
+					<label for="user"><b>Usuario</b></label> <input type="text"
+						placeholder="Usuario de acceso" name="user" id="user" required>
+
+					<label for="pwd"><b>Password</b></label> <input type="password"
+						placeholder="Password de acceso" name="pwd" id="pwd" required>
+
+					<button type="button" class="btn" onclick="entrar();">Acceder</button>
+					<button type="button" class="btn cancel" onclick="closeForm()">Cerrar</button>
+				</form>
+			</div>
+
+
+		</div>
+	</div>
+
+
+	<div class="container" id="ListarReservas">
+	<br>
+	<div id="ListadoReservas"></div>
+</div>
+
+
+<script type="text/javascript">
+
+  
+function cargarPagina(){
+	//$("#main").hide();
+	$("#DatosHotel").hide();
+	$("#autenticacion").hide();
+	$("#myForm").hide();
+	
+	$("#PantReserva").hide();
+	$("#ListarReservas").hide();
+	
+	
+	
+}
+function PantallaHacerReserva(){
+	closeNav();
+	
+	$("#autenticacion").fadeOut("slow");//.hide();
+	$("#myForm").fadeOut("slow");//.hide();
+	$("#ListarReservas").fadeOut("slow");//.hide();
+	//$("#ListadoReservas").fadeOut("slow");//.hide();
+	$("#selecHoteles").delay(500).fadeIn("slow");//.show();
+	verHoteles();
+
+}
+
+function verHoteles(){
+
+	//URL MICROSERVICIO - acceso sin GateWay
+	//var url="http://localhost:8000/";
+	var url="http://localhost:9001/shoteles/"; //URL MICROSERVICIO - CON gateway
+	
+	var sel="<h2>Selección de Hotel</h2>";
+	$.get(url+"Hoteles", function(data,status){
+	 	sel+="<select name='hotel' onchange='fBuscarHotel();' id='hotel'>";
+		for(var h of data) {	
+			sel+="<option value='"+h.idHotel+"'>"+h.nombre+"</option>";			
+		}	
+		sel+="</select><br>";
+		$("#selecHoteles").html(sel);
+	});
+	$("#selecHoteles").delay(500).fadeIn("slow");//.show();
+	
+
+}
+function fBuscarHotel(){
+	$("#selecVuelos").fadeOut("slow");
+	$("#DatosHotel").delay(500).fadeIn("slow");//.show();
+	
+	//URL MICROSERVICIO - acceso sin GateWay
+	//var url="http://localhost:8000/";
+	var url="http://localhost:9001/shoteles/"; //URL MICROSERVICIO - CON gateway
+	
+	var tb="<br><h3>Datos del Hotel : "+$("option:selected", $("#hotel")).text()+"</h3>";
+	$.get(url+"Hotel/"+$("option:selected", $("#hotel")).text(),function(data,status){
+		
+		tb+="<table class='wtabla table table-striped' id='Tlista'>"+
+		"<tr><th><h4>Nombre</h4></th>"+
+		"<th><h4>Categoria</h4></th>"+
+		"<th><h4>Precio</h4></th>"+
+		"</tr>";
+		var i=0;
+		var notaMedia = 0;
+		for(var lin of data) {
+			tb+="<tr>"+
+			"<th>"+lin.nombre+"</th>"+
+			"<th>"+lin.categoria+"</th>"+
+			"<th>"+lin.precio+"</th>"+
+			"</tr>";
+			i++;	
+		}
+		tb+="</table><br>";
+		tb+="<h3>Número de Plazas :  <input align='center' type='text' id='plazas' onchange='verVuelos();'></h3><hr>";
+		
+		$("#DatosHotel").html(tb);
+		
+	});
+	
+}
+function verVuelos(){
+	//alert($('#plazas').val());
+	
+	//URL MICROSERVICIO - acceso sin GateWay
+	//var url="http://localhost:8001/";
+	var url="http://localhost:9001/svuelos/"; //URL MICROSERVICIO - CON gateway
+	
+	var sel="<br><h2>Selección de Vuelo</h2>";
+	$.get(url+"Vuelos/"+$('#plazas').val(), function(data,status){
+	 	sel+="<select name='vuelo' id='vuelo' onchange='fprecioVuelo();'>";
+		for(var v of data) {	
+			sel+="<option value='"+v.idvuelo+"'>"+v.company+"</option>";			
+		}	
+		sel+="</select><br>";
+		$("#selecVuelos").html(sel);
+	});
+	$("#selecVuelos").delay(500).fadeIn("slow");//.show();
+	
+	$("#PantReserva").delay(500).fadeIn("slow");//.show();
+
+}
+
+function fprecioVuelo(){
+	//alert();
+}
+function limpiarFormulario() {
+    document.getElementById("FormularioReserva").reset();
+}
+
+function reservar(){
+	
+	//alert($("#titular").val());
+	//alert($("#dni").val());
+	//alert($("option:selected", $("#hotel")).val());
+	//alert($("option:selected", $("#vuelo")).val());
+		
+	//URL MICROSERVICIO - sin gateway
+	//var url="http://localhost:8002/";
+	var url="http://localhost:9001/sreservas/"; //URL MICROSERVICIO - CON gateway
+	
+	 var plazas=$('#plazas').val();
+	 var datos=new Object();
+  	
+     datos.nombre=$("#titular").val();
+     datos.dni=$("#dni").val();
+     datos.hotel=$("option:selected", $("#hotel")).val();
+     datos.vuelo=$("option:selected", $("#vuelo")).val();	
+ 	 if (datos.nombre=="" | datos.dni==""){
+ 		Swal.fire({
+			  //position: 'top-end',
+			  position: 'botton',
+			  icon: 'success',
+			  title: 'El Nombre o el Dni no pueden estar vacios',
+			  showConfirmButton: false,
+			  timer: 2500
+			});
+ 	 }else{
+     $.ajax({method:"POST",
+             url: url+"Reservar/"+plazas,
+             contentType: "application/json",
+             data: JSON.stringify(datos)}).then(function(data){            	 
+            	 Swal.fire({
+         			  //position: 'top-end',
+         			  position: 'botton',
+         			  icon: 'success',
+         			  title: (data),
+         			  showConfirmButton: false,
+         			  timer: 1500
+         			});
+             });
+     limpiarFormulario();
+     setTimeout(actualizarPlazasVuelo,3000);
+ 	 }
+}
+function actualizarPlazasVuelo() {
+	Swal.fire({
+		  //position: 'top-end',javascript:void(0)
+		  position: 'botton',
+		  icon: 'success',
+		  title: '¡¡ Plazas de Vuelo Actualizadas !!',
+		  showConfirmButton: false,
+		  timer: 1500
+		});
+}
+/*
+function actualizarPlazasVuelo() {
+	//var datos=new Object();
+	
+	//URL MICROSERVICIO - sin gateway
+	var url="http://localhost:8001/";
+	url="http://localhost:9001/svuelos/Vuelos/"; //URL MICROSERVICIO - CON gateway
+	
+    var vuelo=$("option:selected", $("#vuelo")).val();
+    var plazas=$('#plazas').val();
+    //alert(vuelo);
+    //alert(plazas);
+    $.ajax({method:"PUT",
+        url: url+"ActualizarPlazas/"+vuelo+"/"+plazas}).then(function(data){            	 
+       	 Swal.fire({
+    			  //position: 'top-end',
+    			  position: 'botton',
+    			  icon: 'success',
+    			  title: (data),
+    			  showConfirmButton: false,
+    			  timer: 1500
+    			});
+        });
+    
+}
+*/
+
+
+function PantallaListarReservas(){
+	closeNav();
+	limpiarFormulario();
+	
+	$("#selecHoteles").fadeOut("slow");//.hide();
+	$("#DatosHotel").fadeOut("slow");//.hide();
+	$("#selecVuelos").fadeOut("slow");//.hide();
+	$("#PantReserva").fadeOut("slow");//.hide();
+	$("#ListarReservas").fadeOut("slow");//.hide();
+	user="";
+	pwd="";
+	$("#autenticacion").delay(500).fadeIn("slow");//.show();
+	
+}
+var user,pwd;
+function entrar() {
+	
+	user=$("#user").val();
+	pwd=$("#pwd").val();
+	$("#ListadoReservas").html("");
+	$("#ListarReservas").delay(500).fadeIn("slow");//.show();
+	fListarReservas();
+}
+
+function fListarReservas(){
+	//alert(user);
+	//alert(pwd);
+	//URL MICROSERVICIO - sin gateway
+	//var url="http://localhost:8002/";
+	var url="http://localhost:9001/sreservas/"; //URL MICROSERVICIO - CON gateway
+	
+	var tb="<br><h3>Información de Todas las Reservas : </h3>";
+	$.ajax({method:"GET",
+        url: url+"ListarReservas",
+        headers: {"Authorization":"Basic " + btoa(user + ":" + pwd)}}).then(function(data){		
+			tb+="<table class='wtabla table table-striped' id='Tlista'>"+
+			"<tr><th><h4>idReserva</h4></th>"+
+			"<th><h4>Nombre</h4></th>"+
+			"<th><h4>DNI</h4></th>"+
+			"<th><h4>Hotel</h4></th>"+
+			"<th><h4>Vuelo</h4></th>"+
+			"</tr>";
+			
+			for(var lin of data) {
+				tb+="<tr>"+
+				"<th>"+lin.idreserva+"</th>"+
+				"<th>"+lin.nombre+"</th>"+
+				"<th>"+lin.dni+"</th>"+
+				"<th>"+lin.hotel+"</th>"+
+				"<th>"+lin.vuelo+"</th>"+
+				"</tr>";
+
+			}
+			tb+="</table><br>";
+			
+			
+			$("#ListadoReservas").html(tb);
+			
+			 document.getElementById("user").value = "";
+			 document.getElementById("pwd").value = "";
+			 
+			$("#autenticacion").fadeOut("slow");//.hide();
+			$("#myForm").fadeOut("slow");//.hide();
+			$("#ListarReservas").delay(500).fadeIn("slow");//.show();
+	});
+	
+}
+
+
+
+
+
+function openForm() {
+	  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+	  document.getElementById("myForm").style.display = "none";
+}
+
+
+
+
+function openNav() {
+  document.getElementById("mySidebar").style.width = "450px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+
+//Get the button:
+mybutton = document.getElementById("myBtn");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+</script>
+
+
+
+
+</body>
+</html> 
+

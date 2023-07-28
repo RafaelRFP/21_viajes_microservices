@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  viajesdb:
+    image: mysql:8.0
+    container_name: viajesdb 
+    environment:
+      MYSQL_ROOT_PASSWORD: rootroot
+      MYSQL_DATABASE: 'viajes'
+    ports: 
+      - '3346:3306'
+    volumes:
+      - viajesdb:/var/lib/mysql     
+    networks:
+      - viajes-network
+  adminerviajesdb:
+    image: adminer:latest
+    container_name: adminerviajesdb 
+    ports: 
+      - '7070:8080'
+    networks:
+      - viajes-network
+         
+# Names our volume
+volumes:
+  viajesdb:
+
+networks: 
+  viajes-network:
+      name: "viajes-network"
+      driver: bridge 
+
