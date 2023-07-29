@@ -15,7 +15,7 @@ spring:
       - id: servHoteles #Id de la ruta (en realidad esto es solo un id pero no cumple ninguna otra funcion)
           #1-Cuando se va a enrutar la peticion a un microservicio inscrito en Eureka, se usa el valor: "lb" + "//" + el nombre del microservicio TAL CUAL como se haya inscrito en el ecosistema EUREKA 
           #2-Cuando se va a enrutar la peticion a un microservicio NO inscrito en Eureka, se coloca la URL real del microservicio al cual se quiere enrutar la peticion
-        uri: lb://hoteles #http://localhost:8000 = URL real del microservicio de pedidos al cual se enrutara la peticion de entrada
+        uri: lb://hoteles #http://localhost:8003 = URL real del microservicio de pedidos al cual se enrutara la peticion de entrada
         predicates:
           - Path=/shoteles/** #Cuando Gateway detecte que en la peticion URL venga este path, enrutara la peticion hacia el servicio indicado en la propiedad "uri" (lb://servicio-pedidos)
         filters:
